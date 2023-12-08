@@ -1,0 +1,82 @@
+variables: 
+  increaseRate: 1.125
+  increaseBlockRate: -1.125
+  baseBlocks: 100
+  baseReward: 10000
+  cooldownTimer: 1440 #Time is in minutes, 1440 = 24 hours
+
+npcs:
+  '13': "Steve"
+
+objectives:
+  objective_MineCoal: "block COAL_ORE %math.calc:$increaseBlockRate$*{point.QuestCompletions.amount}*$baseBlocks$~0% events:event_Folder_QuestComplete notify:50"
+  objective_SetPoints: "login persistent global events:event_Folder_SetupPoints"
+  objective_Cooldown: "delay $cooldownTimer$ minutes events:event_DelTag_Cooldown"
+
+events:
+  event_Folder_QuestStart: "folder
+    event_StartObjective_MineCoal,\
+    event_Notify_QuestStart,\
+    event_AddTag_QuestStarted"
+  event_Folder_QuestComplete: "folder
+    event_DelTag_QuestStarted,\
+    event_Notify_QuestComplete,\
+    event_AddTag_QuestCompleted"
+  event_Folder_SetupPoints: "folder
+    event_SetPoint_QuestCompletions,\
+    event_RemoveObjective_SetPoints"
+  event_Folder_Reward: "folder
+    event_GiveReward,\
+    event_DelTag_QuestCompleted,\
+    event_AddPoint_QuestCompletions,\
+    event_AddTag_Cooldown,\
+    event_StartObjective_Cooldown"
+  event_GiveReward: "command eco give %player% %math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseReward$% notify"
+  event_SetPoint_QuestCompletions: "point QuestCompletions 1 action:set"
+  event_AddPoint_QuestCompletions: "point QuestCompletions 1 action:add"
+  event_RemoveObjective_SetPoints: "objective remove objective_SetPoints"
+  event_StartObjective_MineCoal: "objective add objective_MineCoal"
+  event_StartObjective_Cooldown: "objective add objective_Cooldown"
+  event_Notify_QuestStart: "notify &aQuest Started &7- &fGather %objective.objective_MineCoal.absoluteTotal% &fCoal!"
+  event_Notify_QuestComplete: "notify &aQuest Commplete&7! &fReturn to Steve to get your reward!"
+  event_AddTag_QuestCompleted: "tag add QuestCompleted"
+  event_DelTag_QuestCompleted: "tag del QuestCompleted"
+  event_AddTag_QuestStarted: "tag add QuestStarted"
+  event_DelTag_QuestStarted: "tag del QuestStarted"
+  event_AddTag_Cooldown: "tag add MiningQuestCooldown"
+  event_DelTag_Cooldown: "tag del MiningQuestCooldown"
+
+conditions:
+  condition_HasTag_QuestStarted: "tag QuestStarted"
+  conditions_HasTag_QuestCompleted: "tag QuestCompleted"
+  conditions_HasTag_Cooldown: "tag MiningQuestCooldown"
+
+conversations:
+  Steve:
+    quester: "Steve"
+    first: "quest_complete,quest_oncooldown,quest_onprogress,quest_greeting"
+    NPC_options:
+      quest_greeting:
+        text: |
+          Hi %player%, could you go and break %math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseBlocks$~0% coal for me? I will pay you %math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseReward$%$
+        pointers: "accept,cancel"
+      quest_onprogress:
+        text: |
+          Hi %player%, you still have &a%objective.objective_MineCoal.absoluteLeft% &fcoal to break. Come back when you are done!
+        condition: "condition_HasTag_QuestStarted"
+      quest_oncooldown:
+        text: |
+          Hi %player%! Please come back in &a%objective.objective_Cooldown.left%
+        conditions: "conditions_HasTag_Cooldown"
+      quest_complete:
+        text: |
+          Hi %player%, here is your reward! &a%math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseReward$%$
+        event: "event_Folder_Reward"
+        conditions: "conditions_HasTag_QuestCompleted"
+      
+    player_options:
+      accept:
+        text: "Yes"
+        events: "event_Folder_QuestStart"
+      cancel:
+        text: "No"
