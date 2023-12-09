@@ -65,6 +65,7 @@ You can edit any of the following variables under each quest packages `variables
 - Base Reward
 - Base Block Amount
 - Repeating Quest
+- Quest Info
 
 How do i use this in objectives? Easy!
 Simply call on the math variable inside your objective as the `amount` selector!
@@ -79,25 +80,13 @@ objectives:
 ```
 Will reult the same way but for breakin Oak Logs
 
+### How do i display quest information? ###
 Displaying quest names - Set your quest name in your variables at the top of your package.yml of your quest packages
 ```
 variables:
   mainQuestName: Mining Quest III
 ```
 Then you can display this anywhere using the placeholder - `%%`
-
-
-```
-events:
-  setMainQuestName: 'variable QuestScoreboardTracker.QuestTracker QuestName "$mainQuestName$"'
-  setMainQuestObj1: 'variable QuestScoreboardTracker.QuestTracker1 Objective1 ""'
-  setMainQuestObj2: 'variable QuestScoreboardTracker.QuestTracker2 Objective2 ""'
-  setMainQuestObj3: 'variable QuestScoreboardTracker.QuestTracker3 Objective3 ""'
-  setSideQuestName: 'variable QuestScoreboardTracker.SideQuestTracker.QuestName ""'
-  setSideQuestObj1: 'variable QuestScoreboardTracker.SideQuestTracker1.Objective1 ""'
-```
-
-displayed with the placeholders -
 ```
 %betonquest_QuestTracker:objective.QuestTracker.QuestName%
 %betonquest_QuestTracker:objective.QuestTracker1.Objective1%
@@ -105,4 +94,34 @@ displayed with the placeholders -
 %betonquest_QuestTracker:objective.QuestTracker2.Objective3%
 %betonquest_QuestTracker:objective.SideQuestTracker.QuestName%
 %betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%
+```
+
+example -
+```
+variables:
+  questerName: Steve
+  sideQuestName: Mining Quest III
+  sideQuestObj1: Mine %objective.objective_MineCoal.absoluteTotal% Coal!
+```
+using 
+```
+%betonquest_QuestTracker:objective.SideQuestTracker.QuestName%
+%betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%
+```
+will dispaly -
+```
+Mining Quest III
+Collect X Coal!
+```
+
+### How to fire the event automatically to update quest info? ###
+Thats easy! Because we are tying in every package into our QuestTracker Template, that means we have access to the events from there!
+Simple add the event `setSideQuestName` into your normal quest startup events! Like into your start folders, or ect. For example, using the Mining Quest package this is achieved in the start folder here -
+```
+events:
+  event_Folder_QuestStart: "folder
+    event_StartObjective_MineCoal,\
+    event_Notify_QuestStart,\
+    event_AddTag_QuestStarted,\
+    setSideQuestName"
 ```
