@@ -1,15 +1,17 @@
-variables: 
-  increaseRate: 1.125
-  increaseBlockRate: -1.125
-  baseBlocks: 100
-  baseReward: 10000
-  cooldownTimer: 1440 #Time is in minutes, 1440 = 24 hours
+package:
+  templates:
+    - QuestTracker
+
+variables:
+  questerName: Steve
+  sideQuestName: Mining Quest III
+  sideQuestObj1: Mine %objective.objective_MineCoal.absoluteTotal% Coal!
 
 npcs:
   '13': "Steve"
 
 objectives:
-  objective_MineCoal: "block COAL_ORE %math.calc:$increaseBlockRate$*{point.QuestCompletions.amount}*$baseBlocks$~0% events:event_Folder_QuestComplete notify:50"
+  objective_MineCoal: "block COAL_ORE $blockPlaceholder$ events:event_Folder_QuestComplete notify:50"
   objective_SetPoints: "login persistent global events:event_Folder_SetupPoints"
   objective_Cooldown: "delay $cooldownTimer$ minutes events:event_DelTag_Cooldown"
 
@@ -31,14 +33,14 @@ events:
     event_AddPoint_QuestCompletions,\
     event_AddTag_Cooldown,\
     event_StartObjective_Cooldown"
-  event_GiveReward: "command eco give %player% %math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseReward$% notify"
+  event_GiveReward: "command eco give %player% $rewardPlaceholder$ notify"
   event_SetPoint_QuestCompletions: "point QuestCompletions 1 action:set"
   event_AddPoint_QuestCompletions: "point QuestCompletions 1 action:add"
   event_RemoveObjective_SetPoints: "objective remove objective_SetPoints"
   event_StartObjective_MineCoal: "objective add objective_MineCoal"
   event_StartObjective_Cooldown: "objective add objective_Cooldown"
   event_Notify_QuestStart: "notify &aQuest Started &7- &fGather %objective.objective_MineCoal.absoluteTotal% &fCoal!"
-  event_Notify_QuestComplete: "notify &aQuest Commplete&7! &fReturn to Steve to get your reward!"
+  event_Notify_QuestComplete: "notify &aQuest Commplete&7! &fReturn to $questerName$ to get your reward!"
   event_AddTag_QuestCompleted: "tag add QuestCompleted"
   event_DelTag_QuestCompleted: "tag del QuestCompleted"
   event_AddTag_QuestStarted: "tag add QuestStarted"
@@ -53,12 +55,12 @@ conditions:
 
 conversations:
   Steve:
-    quester: "Steve"
+    quester: "&a$questerName$"
     first: "quest_complete,quest_oncooldown,quest_onprogress,quest_greeting"
     NPC_options:
       quest_greeting:
         text: |
-          Hi %player%, could you go and break %math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseBlocks$~0% coal for me? I will pay you %math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseReward$%$
+          Hi %player%, could you go and break $blockPlaceholder$ Coal for me? I will pay you %player% $rewardPlaceholder$
         pointers: "accept,cancel"
       quest_onprogress:
         text: |
@@ -70,7 +72,7 @@ conversations:
         conditions: "conditions_HasTag_Cooldown"
       quest_complete:
         text: |
-          Hi %player%, here is your reward! &a%math.calc:$increaseRate$*{point.QuestCompletions.amount}*$baseReward$%$
+          Hi %player%, here is your reward! &a$rewardPlaceholder$
         event: "event_Folder_Reward"
         conditions: "conditions_HasTag_QuestCompleted"
       
