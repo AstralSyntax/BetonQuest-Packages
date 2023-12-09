@@ -125,3 +125,4 @@ events:
     event_AddTag_QuestStarted,\
     setSideQuestName"
 ```
+To reset the info fire the event `QuestTracker.setSideQuestName` which is set to a default of just a blank space " "
