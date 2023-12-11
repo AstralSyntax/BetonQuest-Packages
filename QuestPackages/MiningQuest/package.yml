@@ -24,7 +24,8 @@ events:
   event_Folder_QuestComplete: "folder
     event_DelTag_QuestStarted,\
     event_Notify_QuestComplete,\
-    event_AddTag_QuestCompleted"
+    event_AddTag_QuestCompleted,\
+    QuestTracker.SetTextForTrackers"
   event_Folder_SetupPoints: "folder
     event_SetPoint_QuestCompletions,\
     event_RemoveObjective_SetPoints"
