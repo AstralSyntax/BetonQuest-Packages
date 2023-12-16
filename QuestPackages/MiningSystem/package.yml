@@ -1,0 +1,251 @@
+variables:
+  #################### General info ####################
+  # Official thread of this Mining system on Beton Quest Discord 
+  # https://discord.com/channels/407221862980911105/1185243740693074061
+  # Made by AstralSyntax & Mr_Wholesome
+  # Our Discords astralsyntax & sadece.fatih
+  #
+  # All the keys are shortened for coding sakes here is the list 
+  # v = variables
+  # e = events
+  # o = objectives
+  # c = conditions
+  # i = items
+  # blank = " "
+  #################### Emoji settings ####################
+  veA:  "⛏"      # Main emoji   - Default ⛏ 
+  veB:  "$vcB$⛏" # Loop emoji 1 - Default ⛏ 
+  veC:  "$vcC$⛏" # Loop emoji 2 - Default ⛏
+  ################ Color settings ####################
+  vcB:  "&c"      # Loop emoji 1 color        - Default &c 
+  vcC:  "&4"      # Loop emoji 2 color        - Default &4
+  vcCL: "&e"      # Click check color         - Default &e
+  vcS:  "&a"      # Success color             - Default &a
+  vcF:  "&4"      # Failed color              - Default &4
+  vcCM: "&4"      # Wrong block color         - Default &4
+  vcR:  "&6"      # Timer info color          - Default &6
+  #################### Text settings ####################
+  vmP1: $veB$ $veB$ $veB$ $veB$ $veB$  # Random Title 1
+  vmP2: $veB$ $veB$ $veB$ $veB$ $veC$  # Random Title 2
+  vmP3: $veB$ $veB$ $veB$ $veC$ $veC$  # Random Title 3
+  vmP4: $veB$ $veB$ $veC$ $veC$ $veC$  # Random Title 4
+  vmP5: $veB$ $veC$ $veC$ $veC$ $veC$  # Random Title 5
+  vmP6: $veC$ $veC$ $veC$ $veC$ $veC$  # Random Title 6
+  vmP7: $veA$ $veA$ $veA$ $veA$ $veA$  # Where players need to confirm
+  vmP8: $veA$ $veA$ $veA$ $veA$ $veA$  # Success display
+  vmP9: $veA$ $veA$ $veA$ $veA$ $veA$  # Failed Display
+  vmP10: "You need to rest"            # Timer text display ( use together with "%objective.odT.left%" to display time left )
+  vmP11: "You can't mine this block"   # Wrong block display
+  vmp12: "&aClick to mine &6[LMB]"     # Click info display leave blank to disable
+  #
+  #################### Text display settings ####################
+  vdCI: bossbar     # Click info display setting leave blank to disable - Default bossbar {bossbar,title,actionbar}
+  vdCMI: actionbar  # Cant mine info display setting leave blank to disable - Default actionbar {bossbar,title,actionbar}
+  vdTI: title       # Timer info display setting leave blank to disable - Default 
+  #
+  #################### Text timer settings ####################
+  vdT: 1       # Time     - Default 1  
+  vdI: 5       # Intreval - Default 5 
+  vdU: seconds # Unit     - Default seconds {ticks,minutes,seconds}
+  #### ^^ more info https://docs.betonquest.org/2.0-DEV/Documentation/Scripting/Building-Blocks/Objectives-List/#wait-delay
+  #
+  #################### Sound settings ####################
+  vsM: block.stone.hit          # Mining sound leave blank to disable  - Default block.stone.hit
+  vsS: entity.arrow.hit_player  # Success sound leave blank to disable - Default entity.arrow.hit_player
+  vsF: enchant.thorns.hit       # Failed sound leave blank to disable  - Default enchant.thorns.hit
+  vsT: enchant.thorns.hit       # Timer sound leave blank to disable   - Default enchant.thorns.hit
+  #
+  #################### Durability settings ####################
+  vbmD: true  # Durability decrease while mining   true-false  !!CASE SENSETIVE!!
+  vbfD: true  # Durability decrease when failed    true-false  !!CASE SENSETIVE!!
+  vbsD: false # Durability decrease when success  true-false  !!CASE SENSETIVE!!
+  # Durability values if disabled above ignore
+  vvmD: 2     # Durability decrease value while mining  - Default 2
+  vvfD: 5     # Durability decrease value when failed   - Default 5
+  vvsD: 1     # Durability decrease value when success  - Default 1
+  #
+  #################### Mine timer settings ####################
+  vbmT: true   # Timer switch   true-false  !!CASE SENSETIVE!!
+  # Timer value if disabled above ignore
+  vmT: 1       # Time     - Default 5
+  vmI: 1       # Intreval - Default 5 
+  vmU: seconds # Unit     - Default seconds {ticks,minutes,seconds}
+  #################### Give Ores Settings  ####################
+  vgnC: 1      # Coal
+  vgnCu: 1     # Copper
+  vgnI: 1      # Iron
+  vgnR: 1      # Redstone
+  vgnL: 1      # Lapis
+  vgnG: 1      # Gold
+  vgnD: 1      # Diamond
+  vgnE: 1      # Emerald
+
+objectives:
+  #################### Main click checks   ####################
+  mine: action left any cancel 
+    conditions:handPick,oreLook,!mining,!ctmT
+    events:emTC
+    persistent
+    global
+  cantMine: action left any cancel
+    conditions:handPick,!oreLook,!mining
+    events:cantMine
+    persistent
+    global
+  omT: action left any cancel
+    conditions:handPick,oreLook,!mining,ctmT
+    events:emT
+    persistent
+    global
+  #
+  #################### Loop when mining ####################
+  display: delay $vdT$ $vdU$ interval:$vdI$
+    events:lookCheck,edM
+  #
+  #################### Mining click checks ####################
+  rConfirm: action left any cancel
+    conditions:rClick,mining
+    events:emS,edS,emTBC,checkCoal  
+  wConfirm: action left any cancel
+    conditions:wClick,mining
+    events:emF,edF,emTBC 
+  #
+  #################### Timer ####################
+  odT: delay $vmT$ $vmU$ interval:$vmI$
+    events:emTR
+events:
+  #################### Durability Events ####################
+  edM: itemdurability HAND SUBTRACT $vvmD$
+    conditions:cbmD
+  edS: itemdurability HAND SUBTRACT $vvsD$
+    conditions:cbsD
+  edF: itemdurability HAND SUBTRACT $vvfD$
+    conditions:cbfD
+  #
+  #################### Timer Events ####################
+  emTC: if ctmT emT else canMine
+  emTBC: if cbmT emTA else test 
+  test: notify continue
+  emT: notify $vcR$$vmP10$ io:$vdTI$ sound:$vsT$
+  emTA: run 
+    ^tag add timer
+    ^objective add odT
+  emTR: tag delete timer
+  #
+  #################### Main Events ####################  
+  # When player clicks to anything else
+  cantMine: notify $vcCM$$vmP11$ io:$vdCMI$
+  # Main title display event
+  canMine: run 
+    ^objective add display,rConfirm,wConfirm
+    ^tag add mining
+    ^effect SLOW 999999 7 hidden noicon
+    ^effect JUMP 999999 150 hidden noicon
+    ^pickrandom 15%emP1,15%emP2,15%emP3,15%emP4,15%emP5,15%emP6,15%emP7
+  #
+  #################### Check Events ####################  
+  # Still looking to a block or holding the item check
+  lookCheck: if oreLook
+    holdCheck
+    else emF
+  holdCheck: if handPick
+    canMine
+    else emF
+  #################### Display Events ####################
+  # Random display events
+  emP1: run
+    ^tag delete rClick
+    ^tag add wClick
+    ^notify $vmP1$ io:title sound:$vsM$
+  emP2: run
+    ^tag delete rClick
+    ^tag add wClick
+    ^notify $vmP2$ io:title sound:$vsM$
+  emP3: run
+    ^tag delete rClick
+    ^tag add wClick
+    ^notify $vmP3$ io:title sound:$vsM$
+  emP4: run
+    ^tag delete rClick
+    ^tag add wClick
+    ^notify $vmP4$ io:title sound:$vsM$
+  emP5: run 
+    ^tag delete rClick
+    ^tag add wClick
+    ^notify $vmP5$ io:title sound:$vsM$
+  emP6: run
+    ^tag delete rClick
+    ^tag add wClick
+    ^notify $vmP6$ io:title sound:$vsM$
+  emP7: run 
+    ^tag delete wClick
+    ^tag add rClick
+    ^notify $vcCL$$vmP7$ io:title sound:$vsM$
+    ^notify $vmp12$ io:$vdCI$
+  
+  # Failed display event
+  emF:  run
+    ^objective remove display,rConfirm,wConfirm
+    ^tag delete mining,wClick,rClick
+    ^deleffect
+    ^notify $vcF$$vmP9$ io:title sound:$vsF$
+  # Success display event
+  emS:  run
+    ^objective remove display,rConfirm,wConfirm
+    ^tag delete mining,wClick,rClick
+    ^deleffect
+    ^notify $vcS$$vmP8$ io:title sound:$vsS$
+  # Give ore events
+  checkCoal: "if lookingCoal giveCoal else checkIron"
+  giveCoal: "give coal $vgnC$"
+  checkIron: "if lookingIron giveIron else checkGold"
+  giveIron: "give iron $vgnI$"
+  checkGold: "if lookingGold giveGold else checkRedstone"
+  giveGold: "give gold $vgnG$"
+  checkRedstone: "if lookingRedstone giveRedstone else checkDiamond"
+  giveRedstone: "give redstone $vgnR$"
+  checkDiamond: "if lookingDiamond giveDiamond else checkEmerald"
+  giveDiamond: "give diamond $vgnD$"
+  checkEmerald: "if lookingEmerald giveEmerald else checkCopper"
+  giveEmerald: "give emerald $vgnE$"
+  checkCopper: "if lookingCopper giveCopper else checkLapis"
+  giveCopper: "give copper $vgnCu$"
+  checkLapis: "if lookingLapis giveLapis else cantMine"
+  giveLapis: "give lapis $vgnL$"
+  
+  # all this is gonna change 
+conditions:
+  cbmD: variable $vbmD$ true
+  cbsD: variable $vbmD$ true
+  cbfD: variable $vbmD$ true
+  
+  cbmT: variable $vbmT$ true
+  ctmT: tag timer
+
+  handPick: "hand pick"
+  
+  oreLook: "looking type:.*_ORE"
+  cDisplay: "objective display"
+  mining: "tag mining"
+  rClick: "tag rClick"
+  wClick: "tag wClick"
+  # Looking at ore
+  lookingCoal: "looking type:COAL_ORE"
+  lookingIron: "looking type:IRON_ORE"
+  lookingGold: "looking type:GOLD_ORE"
+  lookingRedstone: "looking type:REDSTONE_ORE"
+  lookingDiamond: "looking type:DIAMOND_ORE"
+  lookingEmerald: "looking type:EMERALD_ORE"
+  lookingCopper: "looking type:COPPER_ORE"
+  lookingLapis: "looking type:LAPIS_ORE"
+
+items:
+    pick: "minecraft:.*_PICKAXE"
+    coal: "minecraft:coal"
+    iron: "minecraft:raw_iron"
+    gold: "minecraft:raw_gold"
+    redstone: "minecraft:redstone"
+    diamond: "minecraft:diamond"
+    emerald: "minecraft:emerald"
+    copper: "minecraft:raw_copper"
+    lapis: "minecraft:lapis_lazuli"
