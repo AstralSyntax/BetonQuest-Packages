@@ -25,7 +25,7 @@ variables:
 ### Base Mobe Amount - You can use this for increasing block amount selectors for BREAK?PLACE block events based on level ie: Mining Ores, Chopping Trees ect - You can change these ###
   baseMobs: 2 # Base amount of blocks to select
   increaseMobRate: 1.15 # Base increase of 1.125 (base*increase - 10*1.125*playerLevel/5) Negative numbers = Break Block Event, Positive numbers = Place Block Event
-  mobPlaceholder: '%math.calc:$increaseBlockRate$*$baseBlocks$*{ph.player_level}/5~0%' # The math to get the amount of blocks, dont edit unless you know what you are doing
+  mobPlaceholder: '%math.calc:$increaseMobRate$*$baseMobs$*{ph.player_level}/5~0%' # The math to get the amount of blocks, dont edit unless you know what you are doing
 ### Repeating Quest - You can change these ###
   cooldownTimer: 1440 # Time till player can re accept a daily quest or similar, time is in minutes 1440 = 24 hours
 
