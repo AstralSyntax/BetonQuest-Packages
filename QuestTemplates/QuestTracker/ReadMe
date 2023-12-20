@@ -1,0 +1,106 @@
+##############################################################
+#                                                            #
+#                   Created by AstralSyntax                  #
+#               https://github.com/AstralSyntax              #
+#                                                            #
+##############################################################
+I made this as easy as i could for everyone! We wil go through setting it up for all your future quest needs!
+
+### File Locations ###
+First make sure your files are in the correct place!
+`BetonQuest>QuestTemplates>QuestTracker`
+`BetonQuest>QuestPackages>QuestTracker`
+
+________________________________________________________________
+
+### Placeholder Usage ###
+To correctly use the math in this then please make sure you have Papi installed on your server! Run the following commands and you're all set:
+`/papi ecloud download player`
+`/papi reload`
+
+________________________________________________________________
+
+### Template | Package.yml ###
+
+# Variables #
+Don't change these. This is mostly used to reset the placeholders
+
+# Base Reward #
+Contains the math and information for your reward payouts. Set to scale according to level. I suggest not changing this unless you know what you are doing! The current math is based on the following formula -
+baseReward * increaseRate * Player Level / 5
+example: baseReward-100, increaseRate-2, Player Level-25 `100*2*25/5= 1,000`
+example: baseReward-1000, increaseRate-1.25, Player Level-148 `1000*1.25*148/5= 37,000`
+This math made the best sense to me because low level players wont get really large, game breaking, amounts of money. While also high level players will still also get decent payouts to match their levels.
+
+# Base Block Amount #
+Contains the math and information for you block amount selectors. Same as the Reward math. I recommend using smaller base and increase amounts here so they player doesn't end up with extremely high block selectors.
+
+# Repeating Quest #
+Contains the time variable for a "cooldown" of quest
+
+________________________________________________________________
+
+### How to use this in my quest? ###
+You can edit any of the following variables under each quest packages `variables:` section
+- Base Reward
+- Base Block Amount
+- Repeating Quest
+- Quest Info
+All you need to do is link to the template and call on the variables using `$variable$` to display them! Or to edit them in packages just add your `variable:` section! Example -
+```
+Package.yml
+
+package:
+  templates:
+    - QuestTracker
+
+variables:
+  mainQuestName: Tutorial
+  mainQuestObj1: How to use QuestTracker
+```
+Then you just display the variable much like a palcholder but instead of `%`, you use `$`. So the above variables would to display them would be - `$mainQuestName$`, `$mainQuestObj1` which will display `Tutorial`, `How to use QuestTracker`
+
+# How do i use this in objectives? #
+Simply call on the math variable inside your objective as the `amount` selector, or inside anything really to display the number.
+```
+objectives:
+  objective_MineCoal: "block COAL_ORE $blockPlaceholder$"
+
+events:
+  notify: "notify Your pay is $rewardPlaceholder$"
+```
+
+# How do i display quest information? #
+Displaying quest names make sure you set your variable for your quest name in YOUR quest package as mentioned above, then you can display these anywhere using the placeholder, including scoreboards - `%%`
+```
+Placeholders:
+
+%betonquest_QuestTracker:objective.QuestTracker.QuestName%
+%betonquest_QuestTracker:objective.QuestTracker1.Objective1%
+%betonquest_QuestTracker:objective.QuestTracker2.Objective2%
+%betonquest_QuestTracker:objective.QuestTracker3.Objective3%
+%betonquest_QuestTracker:objective.SideQuestTracker.QuestName%
+%betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%
+```
+
+### How to fire the event to update quest info? ###
+Because we are tying in every package into our QuestTracker Template, that means we have access to the events from there! Simple add one of the events from the `events:` section of the template file, for example:`setMainQuestName`, and call those events from your normal quest startup events! You do not need to make a new event in each package, just call on the template package events! Like into your start folders, or ect. For example, using the Mining Quest package this is achieved in the start folder here -
+```
+events:
+  event_Folder_QuestStart: "folder
+    event_StartObjective_MineCoal,\
+    event_Notify_QuestStart,\
+    event_AddTag_QuestStarted,\
+    setSideQuestName" # < This event is not used or made in the actual mining package. we are calling it from the template.
+```
+To reset the info fire the event `QuestTracker.SetTextForTrackers` which is set to a default of just a blank space " "
+```
+events:
+  folder_QuestDone: "folder
+    event_PayReward,\
+    event_NotifyQuestDone,\
+    QuestTracker.SetTextForTrackers" # < This event is being pulled from the QuestTracker files under your QuestPackages. This is the only time a cross package pointer is called on. This one event will clear ALL of the set trackers - QuestName, Objective1, Objective2, Objective3, sideQuestName, sideQuestObjective.
+```
+
+### How to add more trackers ###
+wip

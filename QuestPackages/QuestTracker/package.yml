@@ -1,3 +1,9 @@
+##############################################################
+#                                                            #
+#                   Created by AstralSyntax                  #
+#               https://github.com/AstralSyntax              #
+#                                                            #
+##############################################################
 package:
   templates:
     - QuestTracker
@@ -28,3 +34,12 @@ events:
   StartQuestTracker3: 'variable QuestTracker3 Objective3 " "'
   StartSideQuestTracker: 'variable SideQuestTracker QuestName " "'
   StartSideQuestTracker1: 'variable SideQuestTracker1 Objective1 " "'
+
+########################## Placeholders ##############################
+#  %betonquest_QuestTracker:objective.QuestTracker.QuestName%        #
+#  %betonquest_QuestTracker:objective.QuestTracker1.Objective1%      #
+#  %betonquest_QuestTracker:objective.QuestTracker2.Objective2%      #
+#  %betonquest_QuestTracker:objective.QuestTracker2.Objective3%      #
+#  %betonquest_QuestTracker:objective.SideQuestTracker.QuestName%    #
+#  %betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%  #
+######################################################################
