@@ -82,6 +82,7 @@ Placeholders:
 %betonquest_QuestTracker:objective.SideQuestTracker.QuestName%
 %betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%
 ```
+________________________________________________________________
 
 ### How to fire the event to update quest info? ###
 Because we are tying in every package into our QuestTracker Template, that means we have access to the events from there! Simple add one of the events from the `events:` section of the template file, for example:`setMainQuestName`, and call those events from your normal quest startup events! You do not need to make a new event in each package, just call on the template package events! Like into your start folders, or ect. For example, using the Mining Quest package this is achieved in the start folder here -
@@ -101,6 +102,53 @@ events:
     event_NotifyQuestDone,\
     QuestTracker.SetTextForTrackers" # < This event is being pulled from the QuestTracker files under your QuestPackages. This is the only time a cross package pointer is called on. This one event will clear ALL of the set trackers - QuestName, Objective1, Objective2, Objective3, sideQuestName, sideQuestObjective.
 ```
+________________________________________________________________
+
+### How to use the cooldown ###
+Set your cooldown time to whatever you would like inside the template package. Then we call on the variable `$cooldownTimer$` to display it. To utilize this in quest first we need to add some kind of tag to the player at the end of your quest such as `onCooldown` or whatever you want.
+```
+events:
+  addTag: "tag add onCooldown"
+```
+We also need to fire a new objective at the same time to actually start the cooldown
+```
+objectives:
+  objective_Cooldown: "delay $cooldownTimer$ minutes events:resetCooldown"
+```
+So now the player has a tag and an objective for the amount of time the cooldown is configured to be. Next how do we check for these things? just check for the tag conditions!
+```
+conditions:
+  hasTag: "tag onCooldown"
+```
+use `condition: hasTag` to detect the player is on the cooldown, or you can use `condition: !hasTag` to detect if the player does not have the tag or is on cooldown.
+Checking in npc text:
+```
+quest_oncooldown:
+        text: "Hi %player%! Please come back in &a%objective.objective_Cooldown.left%"
+        conditions: "conditions_HasTag_Cooldown"
+```
+checking in events:
+```
+events:
+  startQuest: "objective add Quest condition:!hasTag"
+```
+Theres other ways to do this besides using the tag but i prefer the tag so thats why i used this method.
+________________________________________________________________
 
 ### How to add more trackers ###
-wip
+Just copy and paste the block section and edit the names and values! -
+Copy and Paste this so you have 2 sections
+```
+### Base Block Amount ###
+  baseBlocks: 10 # Base amount of blocks to select
+  increaseBlockRate:
+  blockPlaceholder: '%math.calc:$increaseBlockRate$*$baseBlocks$*{ph.player_level}/5~0%'
+```
+And edit the names like so
+```
+### Base Tame Amount ###
+  baseTame: 1 # Base amount of blocks to select
+  increaseTameRate: 2
+  blockPlaceholder: '%math.calc:$increaseTameRate$*$baseTame$*{ph.player_level}/5~0%'
+```
+This will get you a a new set of variables to call on for picking a random amount of mobs to tame based on level
