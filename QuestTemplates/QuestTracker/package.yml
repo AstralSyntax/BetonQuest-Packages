@@ -31,8 +31,8 @@ variables:
 
 events:
   setMainQuestName: 'variable QuestTracker.QuestTracker QuestName "$mainQuestName$"'
-  setMainQuestObj1: 'variable QuestTracker.QuestTracker1 Objective1 "$mainQuestObj1$"'
-  setMainQuestObj2: 'variable QuestTracker.QuestTracker2 Objective2 "$mainQuestObj2$"'
-  setMainQuestObj3: 'variable QuestTracker.QuestTracker3 Objective3 "$mainQuestObj3$"'
+  setMainQuestObj1: 'variable QuestTracker.QuestTracker Objective1 "$mainQuestObj1$"'
+  setMainQuestObj2: 'variable QuestTracker.QuestTracker Objective2 "$mainQuestObj2$"'
+  setMainQuestObj3: 'variable QuestTracker.QuestTracker Objective3 "$mainQuestObj3$"'
   setSideQuestName: 'variable QuestTracker.SideQuestTracker QuestName "$sideQuestName$"'
-  setSideQuestObj1: 'variable QuestTracker.SideQuestTracker1 Objective1 "$sideQuestObj1$"'
+  setSideQuestObj1: 'variable QuestTracker.SideQuestTracker Objective1 "$sideQuestObj1$"'
