@@ -11,35 +11,27 @@ package:
 objectives:
   loginfirsttime: 'login persistent global events:StartQuestTrackerFolder'
   QuestTracker: 'variable no-chat persistent'
-  QuestTracker1: 'variable no-chat persistent'
-  QuestTracker2: 'variable no-chat persistent'
-  QuestTracker3: 'variable no-chat persistent'
   SideQuestTracker: 'variable no-chat persistent'
-  SideQuestTracker1: 'variable no-chat persistent'
 
 events:
   StartQuestTrackerFolder: 'folder RemoveLoginObjective,StartQuestTrackerObjectives,SetTextForTrackers'
   RemoveLoginObjective: 'objective remove loginfirsttime'
-  StartQuestTrackerObjectives: 'folder StartTracker,StartTracker1,StartTracker2,StartTracker3,StartSideTracker,StartSideTracker1'
+  StartQuestTrackerObjectives: 'folder StartTracker,StartSideTracker'
   StartTracker: 'objective add QuestTracker'
-  StartTracker1: 'objective add QuestTracker1'
-  StartTracker2: 'objective add QuestTracker2'
-  StartTracker3: 'objective add QuestTracker3'
   StartSideTracker: 'objective add SideQuestTracker'
-  StartSideTracker1: 'objective add SideQuestTracker1'
   SetTextForTrackers: 'folder StartQuestTracker,StartQuestTracker1,StartQuestTracker2,StartQuestTracker3,StartSideQuestTracker,StartSideQuestTracker1'
   StartQuestTracker: 'variable QuestTracker QuestName " "'
-  StartQuestTracker1: 'variable QuestTracker1 Objective1 " "'
-  StartQuestTracker2: 'variable QuestTracker2 Objective2 " "'
-  StartQuestTracker3: 'variable QuestTracker3 Objective3 " "'
+  StartQuestTracker1: 'variable QuestTracker Objective1 " "'
+  StartQuestTracker2: 'variable QuestTracker Objective2 " "'
+  StartQuestTracker3: 'variable QuestTracker Objective3 " "'
   StartSideQuestTracker: 'variable SideQuestTracker QuestName " "'
-  StartSideQuestTracker1: 'variable SideQuestTracker1 Objective1 " "'
+  StartSideQuestTracker1: 'variable SideQuestTracker Objective1 " "'
 
 ########################## Placeholders ##############################
 #  %betonquest_QuestTracker:objective.QuestTracker.QuestName%        #
-#  %betonquest_QuestTracker:objective.QuestTracker1.Objective1%      #
-#  %betonquest_QuestTracker:objective.QuestTracker2.Objective2%      #
-#  %betonquest_QuestTracker:objective.QuestTracker2.Objective3%      #
+#  %betonquest_QuestTracker:objective.QuestTracker.Objective1%      #
+#  %betonquest_QuestTracker:objective.QuestTracker.Objective2%      #
+#  %betonquest_QuestTracker:objective.QuestTracker.Objective3%      #
 #  %betonquest_QuestTracker:objective.SideQuestTracker.QuestName%    #
-#  %betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%  #
+#  %betonquest_QuestTracker:objective.SideQuestTracker.Objective1%  #
 ######################################################################

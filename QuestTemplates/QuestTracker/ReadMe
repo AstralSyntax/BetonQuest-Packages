@@ -76,11 +76,11 @@ Displaying quest names make sure you set your variable for your quest name in YO
 Placeholders:
 
 %betonquest_QuestTracker:objective.QuestTracker.QuestName%
-%betonquest_QuestTracker:objective.QuestTracker1.Objective1%
-%betonquest_QuestTracker:objective.QuestTracker2.Objective2%
-%betonquest_QuestTracker:objective.QuestTracker3.Objective3%
+%betonquest_QuestTracker:objective.QuestTracker.Objective1%
+%betonquest_QuestTracker:objective.QuestTracker.Objective2%
+%betonquest_QuestTracker:objective.QuestTracker.Objective3%
 %betonquest_QuestTracker:objective.SideQuestTracker.QuestName%
-%betonquest_QuestTracker:objective.SideQuestTracker1.Objective1%
+%betonquest_QuestTracker:objective.SideQuestTracker.Objective1%
 ```
 ________________________________________________________________
 
